@@ -83,39 +83,42 @@ $(document).ready(function () {
 
     });
 
-    /***************** Header BG Scroll ******************/
+ /***************** Header BG Scroll ******************/
 
-    $(function () {
-        $(window).scroll(function () {
-            var scroll = $(window).scrollTop();
+$(function () {
+    $(window).scroll(function () {
+        var scroll = $(window).scrollTop();
+        var logo = $('.logo img'); // Select the logo image
 
-            if (scroll >= 20) {
-                $('section.navigation').addClass('fixed');
-                $('header').css({
-                    "border-bottom": "none",
-                    "padding": "35px 0"
-                });
-                $('header .member-actions').css({
-                    "top": "26px",
-                });
-                $('header .navicon').css({
-                    "top": "34px",
-                });
-            } else {
-                $('section.navigation').removeClass('fixed');
-                $('header').css({
-                    "border-bottom": "solid 1px rgba(255, 255, 255, 0.2)",
-                    "padding": "50px 0"
-                });
-                $('header .member-actions').css({
-                    "top": "41px",
-                });
-                $('header .navicon').css({
-                    "top": "48px",
-                });
-            }
-        });
+        if (scroll >= 20) {
+            $('section.navigation').addClass('fixed');
+            $('header').css({
+                "border-bottom": "none",
+                "padding": "35px 0"
+            });
+            $('header .member-actions').css({
+                "top": "26px",
+            });
+            $('header .navicon').css({
+                "top": "34px",
+            });
+            logo.attr("src", "img/logo-w.png"); // Change to the new logo (logo-w.png) when scrolling
+        } else {
+            $('section.navigation').removeClass('fixed');
+            $('header').css({
+                "border-bottom": "solid 1px rgba(255, 255, 255, 0.2)",
+                "padding": "50px 0"
+            });
+            $('header .member-actions').css({
+                "top": "41px",
+            });
+            $('header .navicon').css({
+                "top": "48px",
+            });
+            logo.attr("src", "img/logo.png"); // Revert to the original logo (logo.png)
+        }
     });
+});
     /***************** Smooth Scrolling ******************/
 
     $(function () {
