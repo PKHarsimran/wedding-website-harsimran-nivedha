@@ -5,26 +5,26 @@ var sass = require('gulp-sass')(require('sass'));
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 
-// compile scss to css
+// Compile SCSS to CSS
 gulp.task('sass', function () {
     return gulp.src('./sass/styles.scss')
-        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-        .pipe(rename({basename: 'styles.min'}))
+        .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+        .pipe(rename({ basename: 'styles.min' }))
         .pipe(gulp.dest('./css'));
 });
 
-// watch changes in scss files and run sass task
-gulp.task('sass:watch', function () {
-    gulp.watch('./sass/**/*.scss', ['sass']);
-});
-
-// minify js
+// Minify JS
 gulp.task('minify-js', function () {
     return gulp.src('./js/scripts.js')
         .pipe(uglify())
-        .pipe(rename({basename: 'scripts.min'}))
+        .pipe(rename({ basename: 'scripts.min' }))
         .pipe(gulp.dest('./js'));
 });
 
-// default task
+// Watch SCSS files for changes
+gulp.task('sass:watch', function () {
+    gulp.watch('./sass/**/*.scss', gulp.series('sass'));
+});
+
+// Default task to run both 'sass' and 'minify-js'
 gulp.task('default', gulp.series('sass', 'minify-js'));
