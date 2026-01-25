@@ -210,32 +210,58 @@ $(function () {
 
     $('#add-to-cal').html(myCalendar);
 
-
-    /********************** RSVP **********************/
-    $('#rsvp-form').on('submit', function (e) {
+/********************** RSVP **********************/
+$('#rsvp-form').on('submit', function (e) {
   e.preventDefault();
 
-  var data = $(this).serialize();
+  var $form = $(this);
+  var data  = $form.serialize();
 
-  $('#alert-wrapper').html(alert_markup('info', '<strong>Just a sec!</strong> We are saving your details.'));
+  // prevent double-submit
+  var $btn = $form.find('button[type="submit"], .rsvp-btn').first();
+  $btn.prop('disabled', true);
+
+  $('#alert-wrapper').html(
+    alert_markup('info', '<strong>Just a sec!</strong> We are saving your details.')
+  );
 
   $.ajax({
     url: 'https://script.google.com/macros/s/AKfycbyC9V34zS8mLlXdwsl48G7KW4OE9aClszh7vt5vV5NF2amY2DcLDNXryt-FW63RnhBBRA/exec',
     method: 'POST',
     data: data,
-    dataType: 'json'
+    // Apps Script expects classic form encoding
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    // helps avoid cached responses
+    cache: false,
+    // jQuery will parse JSON if server sends proper JSON
+    dataType: 'json',
+    timeout: 15000
   })
   .done(function (resp) {
-    if (resp.result === "error") {
-      $('#alert-wrapper').html(alert_markup('danger', resp.message));
-    } else {
-      $('#alert-wrapper').html(alert_markup('success', '<strong>Done!</strong> RSVP saved.'));
-      // $('#rsvp-modal').modal('show');
+    console.log('RSVP response:', resp);
+
+    if (!resp || resp.result !== 'success') {
+      var msg = (resp && resp.message) ? resp.message : 'Unexpected response from server.';
+      $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> ' + msg));
+      return;
     }
+
+    $('#alert-wrapper').html(alert_markup('success', '<strong>Done!</strong> RSVP saved.'));
+    $form[0].reset();
+
+    // If you want to show a modal:
+    // $('#rsvp-modal').modal('show');
   })
-  .fail(function (xhr) {
-    console.log(xhr);
-    $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Request failed (check console/network).'));
+  .fail(function (xhr, status, err) {
+    console.log('RSVP failed:', status, err, xhr && xhr.responseText);
+
+    var msg = 'Request failed. Please try again.';
+    if (xhr && xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+
+    $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> ' + msg));
+  })
+  .always(function () {
+    $btn.prop('disabled', false);
   });
 });
 
