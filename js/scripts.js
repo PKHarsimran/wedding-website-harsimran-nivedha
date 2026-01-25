@@ -213,32 +213,30 @@ $(function () {
 
     /********************** RSVP **********************/
     $('#rsvp-form').on('submit', function (e) {
-        e.preventDefault();
-        var data = $(this).serialize();
+  e.preventDefault();
 
-        $('#alert-wrapper').html(alert_markup('info', '<strong>Just a sec!</strong> We are saving your details.'));
+  var data = $(this).serialize();
 
-        if (MD5($('#invite_code').val()) !== 'b0e53b10c1f55ede516b240036b88f40'
-            && MD5($('#invite_code').val()) !== '2ac7f43695eb0479d5846bb38eec59cc') {
-            $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Your invite code is incorrect.'));
-        } else {
-            $.post('https://script.google.com/macros/s/AKfycbxpehyyHgXRhODAyU6ECgBsh6rIn4kg9CVQnDiKetDPyjeVFpPF21vBz45t9cr4rOE1Nw/exec', data)
-                .done(function (data) {
-                    console.log(data);
-                    if (data.result === "error") {
-                        $('#alert-wrapper').html(alert_markup('danger', data.message));
-                    } else {
-                        $('#alert-wrapper').html('');
-                        $('#rsvp-modal').modal('show');
-                    }
-                })
-                .fail(function (data) {
-                    console.log(data);
-                    $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> There is some issue with the server. '));
-                });
-        }
-    });
+  $('#alert-wrapper').html(alert_markup('info', '<strong>Just a sec!</strong> We are saving your details.'));
 
+  $.ajax({
+    url: 'https://script.google.com/macros/s/AKfycbxpehyyHgXRhODAyU6ECgBsh6rIn4kg9CVQnDiKetDPyjeVFpPF21vBz45t9cr4rOE1Nw/exec',
+    method: 'POST',
+    data: data,
+    dataType: 'json'
+  })
+  .done(function (resp) {
+    if (resp.result === "error") {
+      $('#alert-wrapper').html(alert_markup('danger', resp.message));
+    } else {
+      $('#alert-wrapper').html(alert_markup('success', '<strong>Done!</strong> RSVP saved.'));
+      // $('#rsvp-modal').modal('show');
+    }
+  })
+  .fail(function (xhr) {
+    console.log(xhr);
+    $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Request failed (check console/network).'));
+  });
 });
 
 /********************** Extras **********************/
