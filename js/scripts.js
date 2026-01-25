@@ -220,7 +220,7 @@ $(function () {
   $('#alert-wrapper').html(alert_markup('info', '<strong>Just a sec!</strong> We are saving your details.'));
 
   $.ajax({
-    url: 'https://script.google.com/macros/s/AKfycbxpehyyHgXRhODAyU6ECgBsh6rIn4kg9CVQnDiKetDPyjeVFpPF21vBz45t9cr4rOE1Nw/exec',
+    url: 'https://script.google.com/macros/s/AKfycbyC9V34zS8mLlXdwsl48G7KW4OE9aClszh7vt5vV5NF2amY2DcLDNXryt-FW63RnhBBRA/exec',
     method: 'POST',
     data: data,
     dataType: 'json'
