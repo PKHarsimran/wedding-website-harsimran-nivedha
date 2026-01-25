@@ -226,7 +226,7 @@ $('#rsvp-form').on('submit', function (e) {
   );
 
   $.ajax({
-    url: 'https://script.google.com/macros/s/AKfycbyC9V34zS8mLlXdwsl48G7KW4OE9aClszh7vt5vV5NF2amY2DcLDNXryt-FW63RnhBBRA/exec',
+    url: 'https://script.google.com/macros/s/AKfycbyjNpoVOqisur_EdUhMxTMvSIR85b7VU6FFsSC0wxJafZbUAgo4JPupHBmGfbkexlD4Yg/exec',
     method: 'POST',
     data: data,
     // Apps Script expects classic form encoding
