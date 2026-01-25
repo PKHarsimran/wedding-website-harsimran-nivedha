@@ -16,15 +16,23 @@ gulp.task('sass', function () {
 // Minify JS
 gulp.task('minify-js', function () {
     return gulp.src('./js/scripts.js')
-        .pipe(uglify())
+        .pipe(uglify({
+            compress: true,
+            mangle: true
+        }))
         .pipe(rename({ basename: 'scripts.min' }))
         .pipe(gulp.dest('./js'));
 });
 
-// Watch SCSS files for changes
+// Watch SCSS files
 gulp.task('sass:watch', function () {
     gulp.watch('./sass/**/*.scss', gulp.series('sass'));
 });
 
-// Default task to run both 'sass' and 'minify-js'
+// Watch JS files
+gulp.task('js:watch', function () {
+    gulp.watch('./js/scripts.js', gulp.series('minify-js'));
+});
+
+// Default task
 gulp.task('default', gulp.series('sass', 'minify-js'));
